@@ -7,7 +7,6 @@
   <style>
     /* Global Styles */
     body {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
       margin: 0;
       padding: 0;
       height: 100vh;
@@ -20,60 +19,40 @@
       transition: background 0.5s ease;
     }
 
-    /* Background Wave Effect */
-    .background-wave {
-      position: absolute;
-      top: 0;
-      left: 0;
+    /* Fullscreen Iframe */
+    .hub-container {
       width: 100%;
       height: 100%;
-      background: linear-gradient(45deg, rgba(0, 0, 0, 0.4) 50%, transparent 50%);
-      z-index: -1;
-      animation: waveAnimation 15s infinite linear;
+      border: none;
     }
 
-    @keyframes waveAnimation {
-      0% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(20px);
-      }
-      100% {
-        transform: translateY(0);
-      }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
 
-    /* Container Styles */
+    /* Hidden Password Container */
     .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      max-width: 500px;
-      margin: auto;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-      background-color: rgba(0, 0, 0, 0.7);
-      animation: fadeIn 1.2s ease-out;
-      opacity: 1;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      position: absolute;
+      z-index: 1;
     }
 
     h1 {
       font-size: 36px;
-      margin-bottom: 30px;
-      letter-spacing: 2px;
+      margin-bottom: 20px;
     }
 
     .password-input {
-      width: 100%;
+      width: 300px;
       padding: 14px;
       font-size: 18px;
       margin-bottom: 20px;
@@ -114,72 +93,10 @@
       color: #ff4d4d;
       margin-top: 20px;
     }
-
-    /* Hub Container */
-    .hub-container {
-      display: none;
-      width: 100%;
-      height: 70vh;
-      border: none;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 15px;
-    }
-
-    /* Settings Tab */
-    .settings-tab {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: rgba(0, 0, 0, 0.7);
-      padding: 15px;
-      border-radius: 10px;
-      color: white;
-      font-size: 14px;
-      display: none;
-      flex-direction: column;
-    }
-
-    .settings-tab input {
-      padding: 8px;
-      font-size: 14px;
-      margin-top: 8px;
-      border-radius: 6px;
-      border: 1px solid #444;
-      background-color: #2e2e2e;
-      color: white;
-    }
-
-    .settings-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .settings-btn:hover {
-      background-color: #0056b3;
-    }
   </style>
 </head>
 <body>
-  <!-- Background Wave Effect -->
-  <div class="background-wave"></div>
-
-  <!-- Main Container for Password Entry -->
+  <!-- Password Entry Container -->
   <div class="container" id="passwordContainer">
     <h1>Enter the Password</h1>
     <input type="password" id="passwordInput" class="password-input" placeholder="Password" />
@@ -187,32 +104,20 @@
     <div class="incorrect-password" id="incorrectPassword">Incorrect Password, please try again.</div>
   </div>
 
-  <!-- Hidden Hub Container with Iframe -->
-  <div class="hub-container" id="hubContainer">
-    <iframe id="gameIframe" src="https://edu.defdc.com" title="Game Hub"></iframe>
-  </div>
-
-  <!-- Settings Button -->
-  <button class="settings-btn" onclick="toggleSettings()">Settings</button>
-
-  <!-- Settings Tab -->
-  <div class="settings-tab" id="settingsTab">
-    <label for="panicKey">Panic Key: </label>
-    <input type="text" id="panicKey" value="P" />
-    <br>
-    <label for="panicLink">Panic Link: </label>
-    <input type="url" id="panicLink" value="https://www.google.com" />
+  <!-- Fullscreen Hub Container -->
+  <div class="hub-container" id="hubContainer" style="display: none;">
+    <iframe id="gameIframe" src="https://edu.defdc.com" title="Game Hub" onload="changeLink()"></iframe>
   </div>
 
   <script>
     // Correct Password Configuration
     const correctPassword = '12345';
-    const passwordInput = document.getElementById('passwordInput');
     const passwordContainer = document.getElementById('passwordContainer');
+    const passwordInput = document.getElementById('passwordInput');
     const incorrectPassword = document.getElementById('incorrectPassword');
     const hubContainer = document.getElementById('hubContainer');
 
-    // Function to check password
+    // Function to check the password
     function checkPassword() {
       const enteredPassword = passwordInput.value;
       if (enteredPassword === correctPassword) {
@@ -223,31 +128,9 @@
       }
     }
 
-    // Panic Key and Link
-    const panicKeyInput = document.getElementById('panicKey');
-    const panicLinkInput = document.getElementById('panicLink');
-    let panicKey = panicKeyInput.value;
-    let panicLink = panicLinkInput.value;
-
-    panicKeyInput.addEventListener('input', () => {
-      panicKey = panicKeyInput.value.toUpperCase();
-    });
-
-    panicLinkInput.addEventListener('input', () => {
-      panicLink = panicLinkInput.value;
-    });
-
-    window.addEventListener('keydown', (event) => {
-      if (event.key.toUpperCase() === panicKey) {
-        window.location.href = panicLink;
-      }
-    });
-
-    // Toggle Settings Tab
-    const settingsTab = document.getElementById('settingsTab');
-
-    function toggleSettings() {
-      settingsTab.style.display = settingsTab.style.display === 'none' || settingsTab.style.display === '' ? 'flex' : 'none';
+    // Function to change the URL once the iframe is fully loaded
+    function changeLink() {
+      history.pushState(null, null, "I-am-smart");
     }
   </script>
 </body>
