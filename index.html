@@ -6,248 +6,127 @@
   <title>Game Hub</title>
   <style>
     /* Global Styles */
-    body {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
+    body, html {
       margin: 0;
       padding: 0;
-      height: 100vh;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #1a1a1a, #333333);
-      color: #fff;
-      overflow: hidden;
-      transition: background 0.5s ease;
     }
 
-    /* Background Wave Effect */
-    .background-wave {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, rgba(0, 0, 0, 0.4) 50%, transparent 50%);
-      z-index: -1;
-      animation: waveAnimation 15s infinite linear;
-    }
-
-    @keyframes waveAnimation {
-      0% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(20px);
-      }
-      100% {
-        transform: translateY(0);
-      }
-    }
-
-    /* Container Styles */
-    .container {
-      text-align: center;
-      max-width: 500px;
-      margin: auto;
+    /* Password Screen Container */
+    #passwordContainer {
+      background: rgba(0, 0, 0, 0.8);
       padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-      background-color: rgba(0, 0, 0, 0.7);
-      animation: fadeIn 1.2s ease-out;
-      opacity: 1;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 1s ease;
     }
 
     @keyframes fadeIn {
       from {
         opacity: 0;
+        transform: scale(0.9);
       }
       to {
         opacity: 1;
+        transform: scale(1);
       }
     }
 
     h1 {
-      font-size: 36px;
-      margin-bottom: 30px;
-      letter-spacing: 2px;
+      color: #ffffff;
+      font-size: 24px;
+      margin-bottom: 20px;
     }
 
     .password-input {
       width: 100%;
-      padding: 14px;
-      font-size: 18px;
+      max-width: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
       margin-bottom: 20px;
-      border-radius: 8px;
-      border: 1px solid #444;
-      background-color: #333;
-      color: white;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
+      outline: none;
+      background-color: #1e1e1e;
+      color: #ffffff;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     }
 
     .password-input:focus {
       outline: none;
-      border-color: #fff;
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 2px 10px rgba(0, 123, 255, 0.5);
     }
 
     .submit-btn {
-      padding: 12px 25px;
-      font-size: 16px;
       background-color: #007bff;
       border: none;
       color: white;
-      border-radius: 10px;
+      font-size: 16px;
+      padding: 10px 20px;
+      border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
     .submit-btn:hover {
       background-color: #0056b3;
     }
 
-    /* Incorrect Password Message */
-    .incorrect-password {
-      display: none;
-      font-size: 16px;
-      color: #ff4d4d;
-      margin-top: 20px;
-    }
-
-    /* Hub Container */
-    .hub-container {
+    /* Fullscreen Iframe */
+    #hubContainer {
       display: none;
       width: 100%;
-      height: 70vh;
-      border: none;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+      height: 100%;
     }
 
     iframe {
       width: 100%;
       height: 100%;
       border: none;
-      border-radius: 15px;
-    }
-
-    /* Settings Tab */
-    .settings-tab {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: rgba(0, 0, 0, 0.7);
-      padding: 15px;
-      border-radius: 10px;
-      color: white;
-      font-size: 14px;
-      display: none;
-      flex-direction: column;
-    }
-
-    .settings-tab input {
-      padding: 8px;
-      font-size: 14px;
-      margin-top: 8px;
-      border-radius: 6px;
-      border: 1px solid #444;
-      background-color: #2e2e2e;
-      color: white;
-    }
-
-    .settings-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .settings-btn:hover {
-      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
-  <!-- Background Wave Effect -->
-  <div class="background-wave"></div>
-
-  <!-- Main Container for Password Entry -->
-  <div class="container" id="passwordContainer">
+  <!-- Password Screen -->
+  <div id="passwordContainer">
     <h1>Enter the Password</h1>
-    <input type="password" id="passwordInput" class="password-input" placeholder="Password" />
+    <input type="password" id="passwordInput" class="password-input" placeholder="Enter password" />
     <button class="submit-btn" onclick="checkPassword()">Submit</button>
-    <div class="incorrect-password" id="incorrectPassword">Incorrect Password, please try again.</div>
   </div>
 
-  <!-- Hidden Hub Container with Iframe -->
-  <div class="hub-container" id="hubContainer">
-    <iframe id="gameIframe" src="https://edu.defdc.com" title="Game Hub"></iframe>
-  </div>
-
-  <!-- Settings Button -->
-  <button class="settings-btn" onclick="toggleSettings()">Settings</button>
-
-  <!-- Settings Tab -->
-  <div class="settings-tab" id="settingsTab">
-    <label for="panicKey">Panic Key: </label>
-    <input type="text" id="panicKey" value="P" />
-    <br>
-    <label for="panicLink">Panic Link: </label>
-    <input type="url" id="panicLink" value="https://www.google.com" />
+  <!-- Fullscreen Hub -->
+  <div id="hubContainer">
+    <iframe src="https://edu.defdc.com" title="Game Hub"></iframe>
   </div>
 
   <script>
-    // Correct Password Configuration
-    const correctPassword = '12345';
+    const correctPassword = '12345'; // Set your correct password here
     const passwordInput = document.getElementById('passwordInput');
     const passwordContainer = document.getElementById('passwordContainer');
-    const incorrectPassword = document.getElementById('incorrectPassword');
     const hubContainer = document.getElementById('hubContainer');
 
-    // Function to check password
+    // Function to check the password
     function checkPassword() {
       const enteredPassword = passwordInput.value;
       if (enteredPassword === correctPassword) {
         passwordContainer.style.display = 'none';
         hubContainer.style.display = 'block';
       } else {
-        incorrectPassword.style.display = 'block';
+        alert('Incorrect password. Please try again.');
       }
-    }
-
-    // Panic Key and Link
-    const panicKeyInput = document.getElementById('panicKey');
-    const panicLinkInput = document.getElementById('panicLink');
-    let panicKey = panicKeyInput.value;
-    let panicLink = panicLinkInput.value;
-
-    panicKeyInput.addEventListener('input', () => {
-      panicKey = panicKeyInput.value.toUpperCase();
-    });
-
-    panicLinkInput.addEventListener('input', () => {
-      panicLink = panicLinkInput.value;
-    });
-
-    window.addEventListener('keydown', (event) => {
-      if (event.key.toUpperCase() === panicKey) {
-        window.location.href = panicLink;
-      }
-    });
-
-    // Toggle Settings Tab
-    const settingsTab = document.getElementById('settingsTab');
-
-    function toggleSettings() {
-      settingsTab.style.display = settingsTab.style.display === 'none' || settingsTab.style.display === '' ? 'flex' : 'none';
     }
   </script>
 </body>
